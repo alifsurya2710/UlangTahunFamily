@@ -14,6 +14,10 @@ interface Person {
   icon: string;
   birthdayDate: string;
   coupons: string[];
+  favoriteMusic: {
+    title: string;
+    youtubeId: string;
+  };
 }
 
 // Falling Heart Component for the Intro Rain effect
@@ -81,7 +85,8 @@ export default function Home() {
       gradient: "from-[#ff758c] to-[#ff7eb3]",
       icon: "👩‍🍼",
       birthdayDate: "16-Juli-1978",
-      coupons: ["Voucher Pijat Aa (30 Menit)", "Makan di Resto Mana Saja Bebas Pilih", "Libur Masak & Cuci Piring (Aa yang Kerjain)"]
+      coupons: ["Voucher Pijat Aa (10 Menit)", "Makan di Resto Mana Saja Bebas Pilih", "Libur Cuci Piring (Aa yang Kerjain)"],
+      favoriteMusic: { title: "Orang Baru Lebih Gacor 💃", youtubeId: "hQbijnPMAtk" }
     },
     {
       name: "Bapak",
@@ -91,7 +96,8 @@ export default function Home() {
       gradient: "from-[#ff8fa3] to-[#ffb3c1]",
       icon: "👨‍👩-👦",
       birthdayDate: "15-Oktober-1979",
-      coupons: ["Voucher Kopi Enak Bikinan Aa", "Nonton Film Bioskop Bebas Pilih", "Voucher Temenin Belanja (Aa yang Bawa Belanjaan)"]
+      coupons: ["Voucher Kopi Enak Bikinan Aa", "Makan Bakso bandung Tapi Bapak nu Bayar", "Voucher Temenin Belanja (Aa yang Bawa Belanjaan)"],
+      favoriteMusic: { title: "Jalir Jangji 🎭", youtubeId: "6h0jbBADH-Y" }
     },
     {
       name: "Neneng",
@@ -101,7 +107,8 @@ export default function Home() {
       gradient: "from-[#ff8fa3] to-[#ffb3c1]",
       icon: "👧",
       birthdayDate: "30-November-2010",
-      coupons: ["Voucher Jajan Seblak / Baso Aci", "Top up Game atau Skin Bebas Pilih", "Voucher Jalan-jalan ke Mall Bareng Aa"]
+      coupons: ["Voucher Jajan Seblak / Baso", "Check-out Keranjang Tiktok ulah lewih ti 100.000", "Voucher Jalan-jalan ke Mall Bareng Aa"],
+      favoriteMusic: { title: "RUDE! - Hearts2Hearts 🎧", youtubeId: "Q4AE3ub4nBM" }
     }
   ];
 
@@ -237,7 +244,7 @@ export default function Home() {
           <motion.div
             initial={{ opacity: 1 }}
             exit={{ opacity: 0, scale: 1.1, filter: "blur(20px)" }}
-            className="fixed inset-0 z-[300] mesh-bg flex flex-col items-center justify-center p-6 bg-pink-50 overflow-hidden"
+            className="fixed inset-0 z-[500] mesh-bg flex flex-col items-center justify-center p-6 bg-pink-50 overflow-hidden pointer-events-auto"
           >
             {/* Pink Heart Rain Effect - Only render on client to avoid hydration mismatch */}
             {isMounted && <HeartRain />}
@@ -277,7 +284,7 @@ export default function Home() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, y: -50 }}
-            className="fixed inset-0 z-[200] mesh-bg flex flex-col items-center justify-center p-10 overflow-y-auto"
+            className="fixed inset-0 z-[400] mesh-bg flex flex-col items-center justify-center p-10 overflow-y-auto pointer-events-auto"
           >
             <div className="max-w-5xl w-full text-center">
               <motion.div initial={{ y: -20 }} animate={{ y: 0 }} className="mb-16">
@@ -325,11 +332,11 @@ export default function Home() {
       {/* 3. Main Content (Dashboard) */}
       <AnimatePresence>
         {currentUser && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="relative z-30">
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="relative z-[100]">
             {/* Top Navbar */}
-            <nav className="fixed top-0 left-0 w-full px-10 py-8 z-50 pointer-events-none">
-              <div className="max-w-[1440px] mx-auto grid grid-cols-3 items-center pointer-events-auto">
-                <div className="flex items-center gap-3">
+            <nav className="fixed top-0 left-0 w-full px-6 md:px-10 py-6 md:py-8 z-[600] pointer-events-none">
+              <div className="max-w-[1440px] mx-auto flex justify-between items-center pointer-events-auto">
+                <div className="flex items-center gap-2 md:gap-3">
                   <div className="w-10 h-10 flex items-center justify-center">
                     <Image src="/logo.png" alt="Logo tiny" width={40} height={40} className="object-contain" />
                   </div>
@@ -341,12 +348,19 @@ export default function Home() {
                   <a href="#about" className="hover:text-pink-500 transition-colors">Tentang</a>
                 </div>
                  <div className="flex items-center justify-end gap-6">
-                    <button 
-                      onClick={() => setIsPlaying(!isPlaying)}
-                      className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${isPlaying ? 'bg-pink-500 text-white animate-pulse' : 'bg-pink-100 text-pink-500'}`}
-                    >
-                      {isPlaying ? "🎵" : "🔇"}
-                    </button>
+                    <div className="flex flex-col items-end">
+                       <button 
+                         onClick={() => setIsPlaying(!isPlaying)}
+                         className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${isPlaying ? 'bg-pink-500 text-white animate-pulse' : 'bg-pink-100 text-pink-500'}`}
+                       >
+                         {isPlaying ? "🎵" : "🔇"}
+                       </button>
+                       {isPlaying && (
+                         <motion.span initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className="text-[8px] font-black tracking-widest text-pink-400 mt-2">
+                           NOW PLAYING: {currentUser.favoriteMusic.title}
+                         </motion.span>
+                       )}
+                    </div>
                     <button onClick={handleLogout} className="text-[10px] font-black tracking-widest text-pink-400 hover:text-pink-600 transition-colors uppercase">Ganti User ↩</button>
                     <div className="px-6 py-2 bg-pink-100 uppercase text-pink-600 font-black text-[10px] rounded-full border border-pink-200">{currentUser.name} Masuk</div>
                  </div>
@@ -390,7 +404,7 @@ export default function Home() {
                      {/* Visual Centerpiece */}
                      <motion.div 
                        whileHover={{ scale: 1.02 }}
-                       className="w-[280px] h-[280px] md:w-[400px] md:h-[400px] rounded-[4rem] bg-gradient-to-br from-pink-400 to-rose-500 border-[12px] border-white/40 shadow-[0_20px_60px_rgba(244,114,182,0.3)] flex flex-col justify-center p-8 text-center relative z-10 overflow-hidden"
+                       className="w-[280px] h-[280px] md:w-[400px] md:h-[400px] rounded-[4rem] bg-gradient-to-br from-pink-400 to-rose-500 border-[12px] border-white/40 shadow-[0_20px_60px_rgba(244,114,182,0.3)] flex flex-col justify-center p-8 text-center relative z-10 overflow-hidden cursor-default"
                      >
                         <motion.div animate={{ y: [0, -15, 0], rotate: [0, 5, -5, 0] }} transition={{ duration: 5, repeat: Infinity }} className="text-8xl mb-6">
                           {currentUser.icon}
@@ -553,7 +567,7 @@ export default function Home() {
                                 className="w-full h-2 bg-pink-100 rounded-lg appearance-none cursor-pointer accent-pink-500 mb-4"
                               />
                               <p className="text-[9px] font-bold text-pink-400 italic text-center">
-                                {loveLevel < 30 ? "Masa sakitu hungkul? 🥺" : loveLevel < 70 ? "Hatur nuhun Mamah/Bapak/Neng 💖" : "I LOVE YOU TOO! ✨💖"}
+                                {loveLevel < 30 ? "Maennya sakitu hungkul? 🥺" : loveLevel < 70 ? "Hatur nuhun Mamah/Bapak/Neng 💖" : "I LOVE YOU TOO! ✨💖"}
                               </p>
                            </div>
                         </div>
@@ -633,7 +647,11 @@ export default function Home() {
       </AnimatePresence>
 
       {/* Confetti */}
-      {showConfetti && <Confetti width={windowSize.width} height={windowSize.height} recycle={false} numberOfPieces={500} colors={['#ff4d6d', '#ff758c', '#ff8fa3', '#ffb3c1', '#ffffff']} />}
+      {showConfetti && (
+         <div className="fixed inset-0 z-[1000] pointer-events-none">
+           <Confetti width={windowSize.width} height={windowSize.height} recycle={false} numberOfPieces={500} colors={['#ff4d6d', '#ff758c', '#ff8fa3', '#ffb3c1', '#ffffff']} />
+         </div>
+       )}
 
       {/* Password Modal Overlay */}
       <AnimatePresence mode="wait">
@@ -643,7 +661,7 @@ export default function Home() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-pink-900/40 backdrop-blur-md z-[400] flex items-center justify-center p-6"
+            className="fixed inset-0 bg-pink-900/60 backdrop-blur-md z-[700] flex items-center justify-center p-6"
             onClick={() => setUnlockingPerson(null)}
           >
             <motion.div initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.9, y: 20 }} className="bg-white rounded-[2.5rem] max-w-sm w-full p-10 shadow-2xl border border-pink-100 text-center relative overflow-hidden" onClick={(e) => e.stopPropagation()}>
@@ -663,6 +681,20 @@ export default function Home() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Hidden YouTube Audio Player - Optimized for background playback */}
+      {currentUser && isPlaying && (
+        <div key={currentUser.favoriteMusic.youtubeId} className="fixed bottom-0 left-0 w-1 h-1 pointer-events-none opacity-0 z-0 overflow-hidden">
+          <iframe
+            width="100"
+            height="100"
+            src={`https://www.youtube.com/embed/${currentUser.favoriteMusic.youtubeId}?autoplay=1&mute=0&controls=0&loop=1&playlist=${currentUser.favoriteMusic.youtubeId}&enablejsapi=1&version=3`}
+            title="YouTube music player"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            className="absolute inset-0"
+          />
+        </div>
+      )}
     </div>
   );
 }
