@@ -13,6 +13,7 @@ interface Person {
   gradient: string;
   icon: string;
   birthdayDate: string;
+  coupons: string[];
 }
 
 // Falling Heart Component for the Intro Rain effect
@@ -55,12 +56,16 @@ export default function Home() {
   const [showSelection, setShowSelection] = useState(false);
   const [currentUser, setCurrentUser] = useState<Person | null>(null);
   const [entryMethod, setEntryMethod] = useState<"voice" | "manual" | null>(null);
+  const [activeTab, setActiveTab] = useState<"home" | "surprise" | "memories">("home");
   
   // Voice Recognition States
   const [isListening, setIsListening] = useState(false);
   const [voiceStatus, setVoiceStatus] = useState<"idle" | "listening" | "success" | "error">("idle");
   const [recordedTranscript, setRecordedTranscript] = useState("");
   const [browserSupported, setBrowserSupported] = useState(true);
+  const [revealedCoupon, setRevealedCoupon] = useState<string | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [loveLevel, setLoveLevel] = useState(50);
   
   // Per-person Password States
   const [unlockingPerson, setUnlockingPerson] = useState<Person | null>(null);
@@ -75,7 +80,8 @@ export default function Home() {
       color: "#ff4d6d",
       gradient: "from-[#ff758c] to-[#ff7eb3]",
       icon: "👩‍🍼",
-      birthdayDate: "16-Juli-1978"
+      birthdayDate: "16-Juli-1978",
+      coupons: ["Voucher Pijat Aa (30 Menit)", "Makan di Resto Mana Saja Bebas Pilih", "Libur Masak & Cuci Piring (Aa yang Kerjain)"]
     },
     {
       name: "Bapak",
@@ -84,7 +90,8 @@ export default function Home() {
       color: "#ff8fa3",
       gradient: "from-[#ff8fa3] to-[#ffb3c1]",
       icon: "👨‍👩-👦",
-      birthdayDate: "15-Oktober-1979"
+      birthdayDate: "15-Oktober-1979",
+      coupons: ["Voucher Kopi Enak Bikinan Aa", "Nonton Film Bioskop Bebas Pilih", "Voucher Temenin Belanja (Aa yang Bawa Belanjaan)"]
     },
     {
       name: "Neneng",
@@ -93,7 +100,8 @@ export default function Home() {
       color: "#ff8fa3",
       gradient: "from-[#ff8fa3] to-[#ffb3c1]",
       icon: "👧",
-      birthdayDate: "30-November-2010"
+      birthdayDate: "30-November-2010",
+      coupons: ["Voucher Jajan Seblak / Baso Aci", "Top up Game atau Skin Bebas Pilih", "Voucher Jalan-jalan ke Mall Bareng Aa"]
     }
   ];
 
@@ -216,6 +224,8 @@ export default function Home() {
   const handleLogout = () => {
     setCurrentUser(null);
     setShowSelection(true);
+    setActiveTab("home");
+    setRevealedCoupon(null);
   };
 
   return (
@@ -330,38 +340,250 @@ export default function Home() {
                   <a href="#message" className="hover:text-pink-500 transition-colors">Pesan</a>
                   <a href="#about" className="hover:text-pink-500 transition-colors">Tentang</a>
                 </div>
-                <div className="flex items-center justify-end gap-6">
-                   <button onClick={handleLogout} className="text-[10px] font-black tracking-widest text-pink-400 hover:text-pink-600 transition-colors uppercase">Ganti User ↩</button>
-                   <div className="px-6 py-2 bg-pink-100 uppercase text-pink-600 font-black text-[10px] rounded-full border border-pink-200">{currentUser.name} Masuk</div>
-                </div>
+                 <div className="flex items-center justify-end gap-6">
+                    <button 
+                      onClick={() => setIsPlaying(!isPlaying)}
+                      className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${isPlaying ? 'bg-pink-500 text-white animate-pulse' : 'bg-pink-100 text-pink-500'}`}
+                    >
+                      {isPlaying ? "🎵" : "🔇"}
+                    </button>
+                    <button onClick={handleLogout} className="text-[10px] font-black tracking-widest text-pink-400 hover:text-pink-600 transition-colors uppercase">Ganti User ↩</button>
+                    <div className="px-6 py-2 bg-pink-100 uppercase text-pink-600 font-black text-[10px] rounded-full border border-pink-200">{currentUser.name} Masuk</div>
+                 </div>
               </div>
             </nav>
 
-            <main id="home" className="min-h-screen flex flex-col items-center justify-center px-10 relative overflow-hidden">
+            <main className="min-h-screen pt-32 pb-24 px-6 md:px-10 relative overflow-hidden flex flex-col items-center">
                <div className="absolute inset-0 bg-dot-pattern opacity-20" />
                
-               <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="relative text-center">
-                  {/* Visual Centerpiece */}
-                  <div className="w-[300px] h-[300px] md:w-[450px] md:h-[450px] rounded-full bg-gradient-to-br from-pink-400 to-rose-400 border-[15px] border-white/40 shadow-2xl flex flex-col justify-center p-10 mx-auto relative z-10 overflow-hidden">
-                     <motion.div animate={{ y: [0, -10, 0] }} transition={{ duration: 4, repeat: Infinity }} className="text-7xl mb-4 group-hover:scale-125 transition-transform">{currentUser.icon}</motion.div>
-                     <h2 className="text-white text-4xl md:text-6xl font-black leading-tight drop-shadow-lg">Happy Birthday <br/> {currentUser.name}!</h2>
-                  </div>
-                  
-                  <motion.div initial={{ y: 30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.3 }} className="mt-16 max-w-2xl mx-auto">
-                    <div id="message" className="bg-white/60 backdrop-blur-xl border border-pink-100 rounded-[3rem] p-12 md:p-16 shadow-2xl shadow-pink-100/50">
-                       <span className="text-pink-500 font-bold uppercase tracking-[0.4em] text-xs mb-6 block">Ucapan Dari Aa</span>
-                       <p className="text-gray-700 text-xl md:text-2xl font-serif italic leading-relaxed whitespace-pre-wrap">"{currentUser.message}"</p>
-                       <div className="mt-12 flex justify-center gap-6 text-3xl">
-                         {["🎁", "🎈", "🎂", "✨"].map(e => <motion.span key={e} whileHover={{ scale: 1.5, rotate: 20 }}>{e}</motion.span>)}
-                       </div>
-                    </div>
-                  </motion.div>
-               </motion.div>
+               {/* Dashboard Tab Navigation */}
+               <div className="relative z-40 mb-12 flex bg-white/40 backdrop-blur-xl p-2 rounded-full border border-pink-100 shadow-xl">
+                  {[
+                    { id: "home", label: "Celebration", icon: "✨" },
+                    { id: "surprise", label: "Surprise", icon: "🎁" },
+                    { id: "memories", label: "Moments", icon: "💖" }
+                  ].map((tab) => (
+                    <button
+                      key={tab.id}
+                      onClick={() => setActiveTab(tab.id as any)}
+                      className={`flex items-center gap-2 px-6 py-3 rounded-full text-xs font-black uppercase tracking-widest transition-all duration-500 ${
+                        activeTab === tab.id 
+                        ? 'bg-gradient-to-r from-pink-500 to-rose-600 text-white shadow-lg shadow-pink-200' 
+                        : 'text-pink-400 hover:text-pink-600 hover:bg-white/50'
+                      }`}
+                    >
+                      <span>{tab.icon}</span>
+                      <span className="hidden md:inline">{tab.label}</span>
+                    </button>
+                  ))}
+               </div>
 
-               {/* Background Spheres specific to user logged in */}
-               <motion.div animate={{ rotate: 360 }} transition={{ duration: 30, repeat: Infinity, ease: "linear" }} className="absolute inset-0 pointer-events-none opacity-20">
-                  <div className={`sphere-3d absolute top-1/4 left-1/4 w-32 h-32 rounded-full`} />
-                  <div className={`sphere-3d absolute bottom-1/4 right-1/4 w-48 h-48 rounded-full`} />
+               <AnimatePresence mode="wait">
+                 {activeTab === "home" && (
+                   <motion.div 
+                     key="home"
+                     initial={{ opacity: 0, y: 20 }}
+                     animate={{ opacity: 1, y: 0 }}
+                     exit={{ opacity: 0, scale: 0.95 }}
+                     className="w-full max-w-4xl flex flex-col items-center"
+                   >
+                     {/* Visual Centerpiece */}
+                     <motion.div 
+                       whileHover={{ scale: 1.02 }}
+                       className="w-[280px] h-[280px] md:w-[400px] md:h-[400px] rounded-[4rem] bg-gradient-to-br from-pink-400 to-rose-500 border-[12px] border-white/40 shadow-[0_20px_60px_rgba(244,114,182,0.3)] flex flex-col justify-center p-8 text-center relative z-10 overflow-hidden"
+                     >
+                        <motion.div animate={{ y: [0, -15, 0], rotate: [0, 5, -5, 0] }} transition={{ duration: 5, repeat: Infinity }} className="text-8xl mb-6">
+                          {currentUser.icon}
+                        </motion.div>
+                        <h2 className="text-white text-3xl md:text-5xl font-black leading-tight drop-shadow-lg uppercase tracking-tighter">
+                          Happy Birthday <br/> {currentUser.name}!
+                        </h2>
+                     </motion.div>
+                     
+                     <div className="mt-12 w-full max-w-2xl bg-white/70 backdrop-blur-3xl border border-white/50 rounded-[3.5rem] p-10 md:p-16 shadow-2xl shadow-pink-200/20 relative">
+                        <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-pink-500 text-white px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg">
+                          Ucapan Dari Aa
+                        </div>
+                        <p className="text-gray-700 text-xl md:text-2xl font-serif italic leading-relaxed text-center whitespace-pre-wrap">
+                          "{currentUser.message}"
+                        </p>
+                        <div className="mt-12 flex justify-center gap-6 text-3xl">
+                          {["🎁", "🎈", "🎂", "✨"].map((e, idx) => (
+                            <motion.span 
+                              key={e} 
+                              initial={{ opacity: 0, y: 10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ delay: 0.5 + (idx * 0.1) }}
+                              whileHover={{ scale: 1.5, rotate: 20 }}
+                            >
+                              {e}
+                            </motion.span>
+                          ))}
+                        </div>
+                     </div>
+                   </motion.div>
+                 )}
+
+                 {activeTab === "surprise" && (
+                   <motion.div 
+                     key="surprise"
+                     initial={{ opacity: 0, scale: 0.8 }}
+                     animate={{ opacity: 1, scale: 1 }}
+                     exit={{ opacity: 0, scale: 1.1 }}
+                     className="w-full max-w-4xl flex flex-col items-center py-10"
+                   >
+                     <div className="text-center mb-16">
+                        <span className="text-pink-500 font-black uppercase tracking-[0.4em] text-[10px] mb-4 block">Special for {currentUser.name}</span>
+                        <h2 className="text-5xl md:text-7xl font-black text-pink-800 tracking-tighter">
+                          {revealedCoupon ? "Yeay! Kamu Dapat..." : "Ketuk Kotaknya! 🎁"}
+                        </h2>
+                     </div>
+                     
+                     <div className="relative">
+                       <AnimatePresence mode="wait">
+                         {!revealedCoupon ? (
+                           <motion.div 
+                             key="closed-box"
+                             whileHover={{ scale: 1.05 }}
+                             whileTap={{ scale: 0.9 }}
+                             onClick={() => {
+                               setShowConfetti(true);
+                               const randomCoupon = currentUser.coupons[Math.floor(Math.random() * currentUser.coupons.length)];
+                               setRevealedCoupon(randomCoupon);
+                               setTimeout(() => setShowConfetti(false), 5000);
+                             }}
+                             className="relative w-64 h-64 md:w-80 md:h-80 cursor-pointer"
+                           >
+                              <motion.div 
+                                animate={{ y: [0, -20, 0], rotate: [0, 2, -2, 0] }}
+                                transition={{ duration: 3, repeat: Infinity }}
+                                className="w-full h-full bg-pink-100 rounded-[3rem] border-4 border-pink-200 flex items-center justify-center shadow-2xl overflow-hidden group"
+                              >
+                                 <div className="absolute inset-0 bg-gradient-to-br from-white/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                                 <span className="text-8xl md:text-9xl filter drop-shadow-2xl group-hover:scale-110 transition-transform">🎁</span>
+                              </motion.div>
+                              <motion.div animate={{ rotate: 360 }} transition={{ duration: 20, repeat: Infinity, ease: "linear" }} className="absolute -inset-10 border-4 border-dashed border-pink-200 rounded-full opacity-30 pointer-events-none" />
+                           </motion.div>
+                         ) : (
+                           <motion.div 
+                             key="revealed-coupon"
+                             initial={{ opacity: 0, scale: 0.5, y: 50 }}
+                             animate={{ opacity: 1, scale: 1, y: 0 }}
+                             className="flex flex-col items-center"
+                           >
+                             <div className="bg-white p-2 rounded-[2.5rem] shadow-2xl border-4 border-pink-100 relative overflow-hidden">
+                               <div className="bg-gradient-to-br from-pink-500 to-rose-600 px-8 py-12 rounded-[2rem] text-center text-white w-72 md:w-[400px]">
+                                 <div className="text-4xl mb-6">✨</div>
+                                 <p className="text-[10px] font-black tracking-widest uppercase opacity-70 mb-2">FAMILY BIRTHDAY VOUCHER</p>
+                                 <h3 className="text-2xl md:text-3xl font-black leading-tight mb-8">
+                                   {revealedCoupon}
+                                 </h3>
+                                 <div className="w-full h-px bg-white/20 mb-8" />
+                                 <p className="text-[9px] font-bold uppercase tracking-widest leading-relaxed">
+                                   Tukarkan voucher ini ke Aa kapan saja! <br/> (Hanya berlaku untuk yang ulang tahun hari ini ❤️)
+                                 </p>
+                               </div>
+                               <div className="absolute top-1/2 left-0 -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-white rounded-full" />
+                               <div className="absolute top-1/2 right-0 translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-white rounded-full" />
+                             </div>
+                             
+                             <button 
+                               onClick={() => setRevealedCoupon(null)}
+                               className="mt-12 text-pink-500 font-black text-[10px] uppercase tracking-widest hover:text-rose-600 transition-colors flex items-center gap-2"
+                             >
+                               <span>↺</span> Coba Lagi
+                             </button>
+                           </motion.div>
+                         )}
+                       </AnimatePresence>
+                     </div>
+
+                     {!revealedCoupon && (
+                       <p className="mt-16 text-pink-900/40 font-bold uppercase tracking-widest text-xs">
+                         Ada kejutan kecil di setiap ketukan ✨
+                       </p>
+                     )}
+                   </motion.div>
+                 )}
+
+                 {activeTab === "memories" && (
+                   <motion.div 
+                     key="memories"
+                     initial={{ opacity: 0, x: 20 }}
+                     animate={{ opacity: 1, x: 0 }}
+                     exit={{ opacity: 0, x: -20 }}
+                     className="w-full max-w-5xl"
+                   >
+                     <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                        <div className="bg-white/60 backdrop-blur-2xl p-10 md:p-12 rounded-[3.5rem] border border-pink-100 shadow-xl flex flex-col">
+                           <div className="w-16 h-16 bg-pink-50 rounded-2xl flex items-center justify-center text-3xl mb-8 shadow-inner">🏆</div>
+                           <h3 className="text-2xl font-black text-pink-800 mb-4 tracking-tight">Kenapa {currentUser.name} Hebat?</h3>
+                           <ul className="space-y-4 mb-12">
+                             {[
+                               "Selalu memberi dukungan penuh buat Aa",
+                               "Sabar banget ngadepin Aa nu rada on-on",
+                               "Sumber kebahagiaan di rumah kita ❤️",
+                               "Paling ngertiin apa yang Aa butuhin"
+                             ].map((trait, i) => (
+                               <motion.li 
+                                 key={i}
+                                 initial={{ opacity: 0, x: -10 }}
+                                 animate={{ opacity: 1, x: 0 }}
+                                 transition={{ delay: i * 0.1 }}
+                                 className="flex items-center gap-4 text-gray-600 font-medium"
+                               >
+                                 <span className="w-2 h-2 rounded-full bg-pink-400" />
+                                 {trait}
+                               </motion.li>
+                             ))}
+                           </ul>
+
+                           {/* Interactive Love Meter */}
+                           <div className="mt-auto pt-8 border-t border-pink-50">
+                              <div className="flex justify-between items-center mb-4">
+                                 <span className="text-[10px] font-black uppercase tracking-widest text-pink-500">Love Meter Untuk Aa</span>
+                                 <span className="text-lg font-black text-pink-600">{loveLevel}%</span>
+                              </div>
+                              <input 
+                                type="range" 
+                                min="0" 
+                                max="100" 
+                                value={loveLevel} 
+                                onChange={(e) => setLoveLevel(parseInt(e.target.value))}
+                                className="w-full h-2 bg-pink-100 rounded-lg appearance-none cursor-pointer accent-pink-500 mb-4"
+                              />
+                              <p className="text-[9px] font-bold text-pink-400 italic text-center">
+                                {loveLevel < 30 ? "Masa sakitu hungkul? 🥺" : loveLevel < 70 ? "Hatur nuhun Mamah/Bapak/Neng 💖" : "I LOVE YOU TOO! ✨💖"}
+                              </p>
+                           </div>
+                        </div>
+
+                        <div className="bg-gradient-to-br from-pink-500 to-rose-600 p-10 md:p-12 rounded-[3.5rem] shadow-2xl shadow-pink-200 text-white relative overflow-hidden group">
+                           <div className="absolute top-0 right-0 p-8 opacity-20 group-hover:rotate-12 transition-transform duration-700">
+                              <div className="w-32 h-32 md:w-56 md:h-56 border-8 border-white rounded-[3rem] rotate-12" />
+                           </div>
+                           <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center text-3xl mb-8 backdrop-blur-md shadow-inner">📸</div>
+                           <h3 className="text-2xl font-black mb-4 tracking-tight">Gallery Segera Hadir</h3>
+                           <p className="text-white/80 font-medium leading-relaxed mb-12">
+                             Nanti di bagian ini Aa bakal pasang foto-foto kebersamaan kita yang paling estetik. Untuk sekarang, bayangin aja dulu betapa gantengnya Aa dan gimana sayangnya Aa ka {currentUser.name} 😋
+                           </p>
+                           <div className="mt-auto pt-8 border-t border-white/20 flex items-center gap-4">
+                              <div className="w-12 h-12 rounded-full bg-white/30 flex items-center justify-center text-xl">✨</div>
+                              <div>
+                                <p className="text-[10px] font-bold uppercase tracking-widest text-white/60">Status Album</p>
+                                <p className="text-xs font-black tracking-widest uppercase">Sedang Kurasi Foto...</p>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                   </motion.div>
+                 )}
+               </AnimatePresence>
+
+               {/* Decorative floating elements specific to tab */}
+               <motion.div animate={{ rotate: 360 }} transition={{ duration: 30, repeat: Infinity, ease: "linear" }} className="fixed inset-0 pointer-events-none opacity-10 z-0">
+                  <div className={`sphere-3d absolute top-1/2 left-1/4 w-32 h-32 rounded-full`} />
+                  <div className={`sphere-3d absolute bottom-1/4 right-1/2 w-48 h-48 rounded-full`} />
                </motion.div>
             </main>
 
