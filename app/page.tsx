@@ -11,9 +11,10 @@ interface Person {
   message: string;
   color: string;
   gradient: string;
-  icon: string;
+  photo: string;
   birthdayDate: string;
   coupons: string[];
+  gallery?: string[];
   favoriteMusic: {
     title: string;
     youtubeId: string;
@@ -83,9 +84,10 @@ export default function Home() {
       message: "Terima kasih untuk segalanya Mamah. Doa dan kasih sayang Mamah adalah kekuatan terbesar Aa. Selamat ulang tahun yaa, semoga panjang umur dan sehat selalu, dan kehadiran Mamah selalu jadi berkah terindah dalam hidup Aa 💖 Aa oge minta maaf ka Mamah karna Aa pernah ngabentak Mamah, sering marah-marah jeung hese dibejaan mun nanaon teh, Aa juga minta maaf kalau belum bisa jadi anak yang Mamah mau atau yang diharapkan dari Mamah ke Aa. Aa sadar Aa masih banyak kurangna, kadang teu serius mun aya naon-naon, tapi Aa bersyukur banget punya Mamah 💖 makasih yaa Mamah udah jadi Mamah yang baik, yang jarang marah-marah ka Aa jeung ka si Neneng, dan selalu ngeusahain apa yang Aa pengen. LOVE YOU Mamah 💖",
       color: "#ff4d6d",
       gradient: "from-[#ff758c] to-[#ff7eb3]",
-      icon: "👩‍🍼",
+      photo: "/images/mamah.jpg",
       birthdayDate: "16-Juli-1978",
       coupons: ["Voucher Pijat Aa (10 Menit)", "Makan di Resto Mana Saja Bebas Pilih", "Libur Cuci Piring (Aa yang Kerjain)"],
+      gallery: ["/images/mamah-selfie.jpg"],
       favoriteMusic: { title: "Orang Baru Lebih Gacor 💃", youtubeId: "hQbijnPMAtk" }
     },
     {
@@ -94,9 +96,10 @@ export default function Home() {
       message: "Terima kasih Bapak atas semua perjuangan dan cinta Bapak ka Aa yang tak terbatas. Semoga di hari spesial ini Bapak selalu diberi kesehatan, kebahagiaan, dan kemudahan dalam segala hal, Aa bangga punya Bapak 💖 Aa oge minta maaf ka Bapak karna Aa can bisa jadi budak lalaki nu bisa dibanggakeun jeung diandelkeun ku Bapak, Aa juga minta maaf karna Aa orangna hese dibejaan, kadang polontong jeung banyak hereyna. Tapi jujur Aa bersyukur banget punya Bapak 💖 karena Bapak can pernah marah-marah atawa galak ka budakna, tara ngomong kasar, teu pernah ngabentak, Tapi paling kurang na Bapak mah rada on-on saeutik jeung pedit saeutik, tapi teu nanaon, namanya juga manusia pasti ada kurang jeung lebihna. Makasih yaa Bapak udah jadi Bapak yang baik dan perhatian ka Aa jeung ka si Neneng. LOVE YOU Bapak 💖",
       color: "#ff8fa3",
       gradient: "from-[#ff8fa3] to-[#ffb3c1]",
-      icon: "👨‍👩-👦",
+      photo: "/images/bapak.jpg",
       birthdayDate: "15-Oktober-1979",
       coupons: ["Voucher Kopi Enak Bikinan Aa", "Makan Bakso bandung Tapi Bapak nu Bayar", "Voucher Temenin Belanja (Aa yang Bawa Belanjaan)"],
+      gallery: ["/images/bapak-selfie.jpg"],
       favoriteMusic: { title: "Jalir Jangji 🎭", youtubeId: "6h0jbBADH-Y" }
     },
     {
@@ -105,9 +108,10 @@ export default function Home() {
       message: "Happy birthday Nenengku tersayang! Semoga kamu jadi pribadi yang makin baik, sukses dalam studi, dan selalu ceria nyebarin tawa ke orang-orang di sekitar Neneng. Aa selalu ada buat nemenin dan dukung setiap langkah Neneng 💖 Aa juga mau minta maaf yaa, karena sekarang Aa belum bisa ngasih apa-apa ke Neneng, tapi insyaAllah nanti kalau Aa sudah kerja jeung punya uang, naon wae yang Neneng pengen bakal Aa usahain buat dibeliin 💖",
       color: "#ff8fa3",
       gradient: "from-[#ff8fa3] to-[#ffb3c1]",
-      icon: "👧",
+      photo: "/images/neneng.jpg",
       birthdayDate: "30-November-2010",
       coupons: ["Voucher Jajan Seblak / Baso", "Check-out Keranjang Tiktok ulah lewih ti 100.000", "Voucher Jalan-jalan ke Mall Bareng Aa"],
+      gallery: ["/images/neneng-selfie.jpg"],
       favoriteMusic: { title: "RUDE! - Hearts2Hearts 🎧", youtubeId: "Q4AE3ub4nBM" }
     }
   ];
@@ -307,8 +311,18 @@ export default function Home() {
                   >
                     <div className={`relative h-[350px] w-full rounded-[3rem] bg-gradient-to-br ${person.gradient} shadow-2xl flex flex-col items-center justify-center p-8 overflow-hidden transition-all duration-500 group-hover:shadow-pink-300/50`}>
                        <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
-                       <div className="w-24 h-24 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-5xl mb-6 shadow-inner">
-                         {person.icon}
+                       <div className="w-24 h-24 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center mb-6 shadow-inner overflow-hidden border-2 border-white/30">
+                          <Image 
+                            src={person.photo} 
+                            alt={person.name} 
+                            width={96} 
+                            height={96} 
+                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
+                            onError={(e: any) => {
+                              // Fallback for missing photos
+                              e.target.src = "https://ui-avatars.com/api/?name=" + person.name + "&background=ff758c&color=fff&size=128";
+                            }}
+                          />
                        </div>
                        <h3 className="text-white text-3xl font-black tracking-tight mb-1">{person.name}</h3>
                        <span className="text-white/80 font-bold text-xs uppercase tracking-widest mb-1">{person.role}</span>
@@ -401,15 +415,24 @@ export default function Home() {
                      exit={{ opacity: 0, scale: 0.95 }}
                      className="w-full max-w-4xl flex flex-col items-center"
                    >
-                     {/* Visual Centerpiece */}
+                     {/* Visual Centerpiece - Photo Version */}
                      <motion.div 
                        whileHover={{ scale: 1.02 }}
-                       className="w-[280px] h-[280px] md:w-[400px] md:h-[400px] rounded-[4rem] bg-gradient-to-br from-pink-400 to-rose-500 border-[12px] border-white/40 shadow-[0_20px_60px_rgba(244,114,182,0.3)] flex flex-col justify-center p-8 text-center relative z-10 overflow-hidden cursor-default"
+                       className="w-[280px] h-[280px] md:w-[400px] md:h-[400px] rounded-[4rem] bg-gradient-to-br from-pink-400 to-rose-500 border-[12px] border-white/40 shadow-[0_20px_60px_rgba(244,114,182,0.3)] flex flex-col justify-center items-center text-center relative z-10 overflow-hidden cursor-default group"
                      >
-                        <motion.div animate={{ y: [0, -15, 0], rotate: [0, 5, -5, 0] }} transition={{ duration: 5, repeat: Infinity }} className="text-8xl mb-6">
-                          {currentUser.icon}
-                        </motion.div>
-                        <h2 className="text-white text-3xl md:text-5xl font-black leading-tight drop-shadow-lg uppercase tracking-tighter">
+                        <div className="absolute inset-0">
+                          <Image 
+                            src={currentUser.photo} 
+                            alt={currentUser.name} 
+                            fill
+                            className="object-cover opacity-60 group-hover:opacity-80 group-hover:scale-110 transition-all duration-[2s]"
+                            onError={(e: any) => {
+                              e.target.src = "https://ui-avatars.com/api/?name=" + currentUser.name + "&background=ff758c&color=fff&size=512";
+                            }}
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-pink-900/40 via-transparent to-transparent" />
+                        </div>
+                        <h2 className="text-white text-3xl md:text-5xl font-black leading-tight drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)] uppercase tracking-tighter relative z-10">
                           Happy Birthday <br/> {currentUser.name}!
                         </h2>
                      </motion.div>
@@ -530,7 +553,18 @@ export default function Home() {
                    >
                      <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                         <div className="bg-white/60 backdrop-blur-2xl p-10 md:p-12 rounded-[3.5rem] border border-pink-100 shadow-xl flex flex-col">
-                           <div className="w-16 h-16 bg-pink-50 rounded-2xl flex items-center justify-center text-3xl mb-8 shadow-inner">🏆</div>
+                           <div className="w-16 h-16 bg-pink-50 rounded-2xl flex items-center justify-center mb-8 shadow-inner overflow-hidden border border-pink-100">
+                             <Image 
+                               src={currentUser.photo} 
+                               alt="Mini Photo" 
+                               width={64} 
+                               height={64} 
+                               className="w-full h-full object-cover"
+                               onError={(e: any) => {
+                                 e.target.src = "https://ui-avatars.com/api/?name=" + currentUser.name + "&background=ff758c&color=fff&size=64";
+                               }}
+                             />
+                           </div>
                            <h3 className="text-2xl font-black text-pink-800 mb-4 tracking-tight">Kenapa {currentUser.name} Hebat?</h3>
                            <ul className="space-y-4 mb-12">
                              {[
@@ -573,21 +607,51 @@ export default function Home() {
                         </div>
 
                         <div className="bg-gradient-to-br from-pink-500 to-rose-600 p-10 md:p-12 rounded-[3.5rem] shadow-2xl shadow-pink-200 text-white relative overflow-hidden group">
-                           <div className="absolute top-0 right-0 p-8 opacity-20 group-hover:rotate-12 transition-transform duration-700">
-                              <div className="w-32 h-32 md:w-56 md:h-56 border-8 border-white rounded-[3rem] rotate-12" />
-                           </div>
-                           <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center text-3xl mb-8 backdrop-blur-md shadow-inner">📸</div>
-                           <h3 className="text-2xl font-black mb-4 tracking-tight">Gallery Segera Hadir</h3>
-                           <p className="text-white/80 font-medium leading-relaxed mb-12">
-                             Nanti di bagian ini Aa bakal pasang foto-foto kebersamaan kita yang paling estetik. Untuk sekarang, bayangin aja dulu betapa gantengnya Aa dan gimana sayangnya Aa ka {currentUser.name} 😋
-                           </p>
-                           <div className="mt-auto pt-8 border-t border-white/20 flex items-center gap-4">
-                              <div className="w-12 h-12 rounded-full bg-white/30 flex items-center justify-center text-xl">✨</div>
-                              <div>
-                                <p className="text-[10px] font-bold uppercase tracking-widest text-white/60">Status Album</p>
-                                <p className="text-xs font-black tracking-widest uppercase">Sedang Kurasi Foto...</p>
-                              </div>
-                           </div>
+                           {currentUser.gallery && currentUser.gallery.length > 0 ? (
+                             <>
+                                <div className="absolute inset-0">
+                                   <Image 
+                                     src={currentUser.gallery[0]} 
+                                     alt="Gallery Photo" 
+                                     fill 
+                                     className="object-cover opacity-40 group-hover:opacity-60 transition-all duration-700 group-hover:scale-110"
+                                   />
+                                   <div className="absolute inset-0 bg-gradient-to-t from-pink-900/60 to-transparent" />
+                                </div>
+                                <div className="relative z-10 h-full flex flex-col">
+                                   <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center text-3xl mb-8 backdrop-blur-md shadow-inner">📸</div>
+                                   <h3 className="text-2xl font-black mb-4 tracking-tight">Gallery Foto</h3>
+                                   <p className="text-white/90 font-medium leading-relaxed mb-12">
+                                     Ini foto kebersamaan kita yang Aa simpen di sini. Makin banyak kenangan, makin banyak yang bakal Aa pajang nanti! ✨
+                                   </p>
+                                   <div className="mt-auto pt-8 border-t border-white/20 flex items-center gap-4">
+                                      <div className="w-12 h-12 rounded-full bg-white/30 flex items-center justify-center text-xl">✨</div>
+                                      <div>
+                                        <p className="text-[10px] font-bold uppercase tracking-widest text-white/60">Status Album</p>
+                                        <p className="text-xs font-black tracking-widest uppercase">1 Foto Tersimpan</p>
+                                      </div>
+                                   </div>
+                                </div>
+                             </>
+                           ) : (
+                             <>
+                                <div className="absolute top-0 right-0 p-8 opacity-20 group-hover:rotate-12 transition-transform duration-700">
+                                   <div className="w-32 h-32 md:w-56 md:h-56 border-8 border-white rounded-[3rem] rotate-12" />
+                                </div>
+                                <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center text-3xl mb-8 backdrop-blur-md shadow-inner">📸</div>
+                                <h3 className="text-2xl font-black mb-4 tracking-tight">Gallery Segera Hadir</h3>
+                                <p className="text-white/80 font-medium leading-relaxed mb-12">
+                                  Nanti di bagian ini Aa bakal pasang foto-foto kebersamaan kita yang paling estetik. Untuk sekarang, bayangin aja dulu betapa gantengnya Aa dan gimana sayangnya Aa ka {currentUser.name} 😋
+                                </p>
+                                <div className="mt-auto pt-8 border-t border-white/20 flex items-center gap-4">
+                                   <div className="w-12 h-12 rounded-full bg-white/30 flex items-center justify-center text-xl">✨</div>
+                                   <div>
+                                     <p className="text-[10px] font-bold uppercase tracking-widest text-white/60">Status Album</p>
+                                     <p className="text-xs font-black tracking-widest uppercase">Sedang Kurasi Foto...</p>
+                                   </div>
+                                </div>
+                             </>
+                           )}
                         </div>
                      </div>
                    </motion.div>
