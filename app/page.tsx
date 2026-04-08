@@ -86,7 +86,7 @@ export default function Home() {
       gradient: "from-[#ff758c] to-[#ff7eb3]",
       photo: "/images/mamah.jpg",
       birthdayDate: "16-Juli-1978",
-      coupons: ["Voucher Pijat Aa (10 Menit)", "Makan di Resto Mana Saja Bebas Pilih", "Libur Cuci Piring (Aa yang Kerjain)"],
+      coupons: ["Voucher Pijat Aa (10 Menit)", "Makan di Resto Mana Saja Bebas Pilih tapi Mamah nu bayar hehehe", "Libur Cuci Piring (Aa yang Kerjain) meren"],
       gallery: ["/images/mamah-selfie.jpg"],
       favoriteMusic: { title: "Orang Baru Lebih Gacor 💃", youtubeId: "hQbijnPMAtk" }
     },
@@ -98,7 +98,7 @@ export default function Home() {
       gradient: "from-[#ff8fa3] to-[#ffb3c1]",
       photo: "/images/bapak.jpg",
       birthdayDate: "15-Oktober-1979",
-      coupons: ["Voucher Kopi Enak Bikinan Aa", "Makan Bakso bandung Tapi Bapak nu Bayar", "Voucher Temenin Belanja (Aa yang Bawa Belanjaan)"],
+      coupons: ["Voucher Kopi jeung Nasi GorengEnak Bikinan Mas Awing tapi Bapak nu bayar hehehe", "Makan Bakso bandung Tapi Bapak nu Bayar", "Voucher Temenin Belanja (Aa nu Bawa Belanjaan na Bapak nu bayar na hehehe)"],
       gallery: ["/images/bapak-selfie.jpg"],
       favoriteMusic: { title: "Jalir Jangji 🎭", youtubeId: "6h0jbBADH-Y" }
     },
@@ -110,7 +110,7 @@ export default function Home() {
       gradient: "from-[#ff8fa3] to-[#ffb3c1]",
       photo: "/images/neneng.jpg",
       birthdayDate: "30-November-2010",
-      coupons: ["Voucher Jajan Seblak / Baso", "Check-out Keranjang Tiktok ulah lewih ti 100.000", "Voucher Jalan-jalan ke Mall Bareng Aa"],
+      coupons: ["Voucher Jajan Seblak / Baso Mas Joko", "Check-out Keranjang Tiktok ulah lewih ti 100.000 hehehe", "Voucher Jajan ka Indomaret jeung Aa tapi Neneng nu bayar na hehehe"],
       gallery: ["/images/neneng-selfie.jpg"],
       favoriteMusic: { title: "RUDE! - Hearts2Hearts 🎧", youtubeId: "Q4AE3ub4nBM" }
     }
