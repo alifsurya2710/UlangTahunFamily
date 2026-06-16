@@ -11,9 +11,13 @@ const SITE_URL = "https://ulang-tahun-family.vercel.app";
 const FloatingParticle = ({
   emoji,
   style,
+  animDuration,
+  animDelay,
 }: {
   emoji: string;
   style: React.CSSProperties;
+  animDuration?: number;
+  animDelay?: number;
 }) => (
   <motion.div
     className="absolute pointer-events-none select-none text-2xl md:text-4xl"
@@ -25,10 +29,10 @@ const FloatingParticle = ({
       opacity: [0.4, 0.8, 0.4],
     }}
     transition={{
-      duration: (style as any).animDuration ?? 5,
+      duration: animDuration ?? 5,
       repeat: Infinity,
       ease: "easeInOut",
-      delay: (style as any).animDelay ?? 0,
+      delay: animDelay ?? 0,
     }}
   >
     {emoji}
@@ -126,12 +130,12 @@ export default function QRPage() {
           <FloatingParticle
             key={i}
             emoji={p.emoji}
+            animDuration={p.animDuration}
+            animDelay={p.animDelay}
             style={{
               top: p.top,
               left: (p as any).left,
               right: (p as any).right,
-              animDuration: p.animDuration,
-              animDelay: p.animDelay,
               zIndex: 5,
             }}
           />
